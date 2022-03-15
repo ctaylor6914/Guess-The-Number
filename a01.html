@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<!--
+	Programmer: Colby Taylor 8466914
+	Date: 9/20/2021
+	Description: HI Low Game - have the user select a range of numbers to guess, randomly 
+	generate a number within that range and have the user guess.  If the guessed number 
+	is higher than the random number then the range is decreased to the range below the 
+	guessed number.
+-->
+
+<html>
+  <head>
+    <title>High Low Game</title>
+	<h1> High Low Game - Test Your Skill</h1>
+	<style>
+	.section4 
+	{
+		background-color: lime;
+	}
+	</style>
+    <script type="text/javascript">
+	var whichDiv = 1;
+	var name = "";
+	var guess = 0;
+	var range = 0;
+	var a = 0;
+	var bottomLimit  = 0;
+	var random = 0;
+	
+	// ------------------------------------------------------------
+    //          Function: validateName()
+	//			Arguments: void
+	//			Description:Values sent to function to ensure 
+	//					   :that the acceptable content was entered 
+	//			Credit: code taken from econestoga on 9/21/2021
+	//				  : Author = Sean Clarke
+    // ------------------------------------------------------------
+
+	function validateName() 
+    {
+        var nameLength;
+        var nameValid = false;
+        var whichName = document.getElementById("userName").value;
+		
+		
+		// clean up the UI from the previous use
+        document.getElementById("nameError").innerHTML = "";
+        
+	
+		// check that the person's name is not blank (input-level validation) and is comprised of 
+        // alpha characters only (and spaces)
+        nameLength = (whichName.trim()).length;
+        if (nameLength == 0)
+        {
+		// error message / feedback
+		document.getElementById("nameError").innerHTML = "Your name <b>cannot</b> be BLANK.";
+        }
+        else
+        {
+		// setup the regex for alpha characters and spaces
+		var lettersNSpaces = /^[A-Za-z\s]+$/;
+		if(whichName.match(lettersNSpaces))
+		{
+		   nameValid=true;
+		   document.getElementById("whichName").innerHTML = whichName;
+		   name = whichName;
+		   nextDiv();
+		   whichDiv++;
+	    }
+		else
+		{
+		  document.getElementById("nameError").innerHTML = "Your name must be made of <b>alpha</b> characters <u>only</u>.";
+		}
+	   }
+	}
+	
+	
+	// ------------------------------------------------------------
+    //          Function: nextDiv()
+	//			Arguments: void
+	//			Description:Values sent to function to ensure 
+	//					   :that the acceptable content was entered 
+	//			Credit: code taken from econestoga on 9/21/2021
+	//				  : Author = Sean Clarke
+    // ------------------------------------------------------------
+	function nextDiv()
+    {
+	  if(whichDiv == 1)	// we're currently viewing the first div
+	  {
+		document.getElementById("section1").style.display="none";
+		document.getElementById("section2").style.display="block";	// hide the first, show the second
+	  }
+	  else if(whichDiv == 2)
+	  {
+		document.getElementById("section2").style.display="none";
+		document.getElementById("section3").style.display="block";	// hide the second, show the third
+	  }
+	  else if(whichDiv == 3)
+	  {
+		document.getElementById("section3").style.display="none";
+		document.getElementById("section4").style.display="block";
+	  }
+	  else if(whichDiv ==4)
+	  {
+		document.getElementById("section4").style.display="none";
+		document.getElementById("section2").style.display="block";
+		a=0;
+		whichDiv=2;
+		range = 0;
+		bottomLimit = 0;
+	  }
+    }
+	
+	
+	// ------------------------------------------------------------
+    //      Function: validateNum()
+	//		Arguments: void
+	//		Description:validate the number entered to make sure 
+	//				   :that it is a number and that it is above value 2 
+	//			
+    // ------------------------------------------------------------
+	
+	function validateNum()
+	{
+		var num = document.getElementById("range").value;
+		if(num < 2)
+		{
+			document.getElementById("numError").innerHTML = "The <i>Number</i> cannot be less than 2";
+		}
+		else
+		{
+			nextDiv();
+		    whichDiv++;
+		}
+	}
+	
+	
+	
+	// ------------------------------------------------------------
+    //      Function: highLow()
+	//		Arguments: void
+	//		Description:validate the number entered to make sure 
+	//				   :that it is in the correct range of numbers
+	//				   :to try and guess a random number within the set
+	//				   :each guess lowers the number set until the 
+	//				   :correct number is guessed
+	//			
+    // ------------------------------------------------------------
+	function highLow()
+	{
+		var guess = Number(document.getElementById("guess").value);
+		var range1 = Number(document.getElementById("range").value);
+		var bottomL = bottomLimit;
+		
+		document.getElementById("guessError").innerHTML = "";
+		
+		if(a == 0)
+		{
+			random = (Math.floor((Math.random() * range1)));
+			a++;
+			range = range1;
+			if(guess <= bottomL)
+			{
+				document.getElementById("guessError").innerHTML = "Sorry please enter a number within the rangeof "+bottomL+"-"+range1+"";
+				return;
+			}
+		
+			if(guess >= range1)
+			{
+				document.getElementById("guessError").innerHTML = "Sorry please enter a number within the rangeof "+bottomL+"-"+range1+"";
+				return;
+			}
+		
+			if(guess == random)
+			{
+				nextDiv();
+				whichDiv++;
+				return;
+			}
+		
+			else if(guess > random)
+			{
+				range = range1 = guess;
+				document.getElementById("guessError").innerHTML = "Nice Try, please guess again in the range of "+bottomL+"-"+range1+"";
+			}
+			else if(guess < random)
+			{
+				bottomLimit = bottomL = guess;
+				document.getElementById("guessError").innerHTML = "Nice Try, please guess again in the range of "+bottomL+"-"+range1+"";
+			}
+		}
+		else
+		{
+			if(guess <= bottomL)
+			{
+				document.getElementById("guessError").innerHTML = "Sorry please enter a number within the range of "+bottomL+"-"+range+"";
+				return;
+			}
+		
+			if(guess >= range)
+			{
+				document.getElementById("guessError").innerHTML = "Sorry please enter a number within the range of "+bottomL+"-"+range+"";
+				return;
+			}
+		
+			if(guess == random)
+			{
+				nextDiv();
+				whichDiv++;
+				return;
+			}
+		
+			else if(guess > random)
+			{
+				range = guess;
+				document.getElementById("guessError").innerHTML = "Nice Try, please guess again in the range of "+bottomL+"-"+range+"";
+			}
+			else if(guess < random)
+			{
+				bottomLimit = bottomL = guess;
+				document.getElementById("guessError").innerHTML = "Nice Try, please guess again in the range of "+bottomL+"-"+range+"";
+			}
+		}
+	}
+		
+		
+	
+	</script>
+  </head>
+<body>
+	<div id="section1">
+		<tr>
+			<td>What is your name?</td>
+			<td><input name="namePrompt" id="userName" type="text"/></td>
+			<td><div id="nameError" style="color:red;"></div></td>
+			<td colspan="3" align="center"><input id="checkInput" type="button" value="Submit" onclick="validateName();" /></td>
+			<td>&nbsp;</td>
+		</tr>
+		</div>
+		
+		<div id="section2" style="display:none">
+		<tr>
+			<h2>Welcome to the game</h2>
+			<td> <b><span id="whichName"></span></b> please enter the range of numbers to guess from:</td>
+			<td><input name="rangePrompt" id="range" type="number"/></td>
+			<td><div id="numError" style="color:red;"></div></td>
+			<td colspan="3" align="center"><input id="checkNum" type="button" value="Submit" onclick="validateNum();" /></td>
+			<td>&nbsp;</td>
+		</tr>
+		</div>
+		
+		<div id="section3" style="display:none;">
+		<tr>
+		<td><b><span id="userName"></b> Please try and guess the random number within the range </td>
+		<td><input name="guessPrompt" id="guess" type="number"/></td>
+		<td><div id="guessError" style="color:red;"></div></td>
+		<td colspan="3" align="center"><input id="checkInput" type="button" value="Make this Guess" onclick="highLow();" /></td>
+		</tr>
+		</div>
+		
+		
+		<div class="section4" id="section4" style="display:none">
+		<tr>
+		<td>You Win!! You guessed the number!!</td>
+		<td colspan="3" align="center"><input id="checkInput" type="button" value="Play Again?" onclick="nextDiv();" /></td>
+		</tr>
+		</div>
+		
+	</table>
+	</div>
+  </body>
+
+</html>		
